@@ -38,7 +38,7 @@ export function exportVideo() {
     setCanvas(tempCanvas, recordingCtx);
   }
 
-  const stream = recordingCanvas.captureStream(60); // 60 fps
+  const stream = recordingCanvas.captureStream(30); // 30 fps
   recordedChunks = [];
 
   const codecs = [

@@ -3,9 +3,12 @@ import { renderToggleTheme } from '../rendering/toggle.js';
 import { renderLinesTheme } from '../rendering/lines.js';
 import { getCanvas } from '../rendering/canvas.js';
 
-let frameCount = 0;
+const targetFPS = 30;
+const frameInterval = 1000 / targetFPS;
 let lastFrameTime = performance.now();
-let fps = 60;
+let frameCount = 0;
+let lastFPSUpdate = performance.now();
+let fps = 30;
 
 function render() {
   const canvas = getCanvas();
@@ -18,19 +21,24 @@ function render() {
 }
 
 export function animate() {
-  settings.time += 0.016; // ~60fps time increment
-  render();
-
-  // Calculate FPS
-  frameCount++;
   const now = performance.now();
-  if (now - lastFrameTime >= 1000) {
-    fps = frameCount;
-    frameCount = 0;
-    lastFrameTime = now;
-    document.getElementById('fps').textContent = fps;
+  const elapsed = now - lastFrameTime;
+
+  // Throttle to target FPS
+  if (elapsed >= frameInterval) {
+    settings.time += 0.0333; // ~30fps time increment
+    render();
+    lastFrameTime = now - (elapsed % frameInterval);
+
+    // Calculate FPS
+    frameCount++;
+    if (now - lastFPSUpdate >= 1000) {
+      fps = frameCount;
+      frameCount = 0;
+      lastFPSUpdate = now;
+      document.getElementById('fps').textContent = fps;
+    }
   }
-  document.getElementById('frame').textContent = Math.floor(settings.time * 60);
 
   requestAnimationFrame(animate);
 }
