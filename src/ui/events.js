@@ -63,6 +63,10 @@ export function initEventListeners() {
       linesControl.classList.add('hidden');
       widthControl.classList.remove('hidden');
       modeControl.classList.add('hidden'); // Toggle has custom animation
+    } else if (settings.theme === 'toggle39c3') {
+      linesControl.classList.add('hidden');
+      widthControl.classList.add('hidden');
+      modeControl.classList.add('hidden'); // 39C3 Toggle has custom animation
     } else if (settings.theme === 'ccc') {
       linesControl.classList.remove('hidden');
       widthControl.classList.add('hidden');

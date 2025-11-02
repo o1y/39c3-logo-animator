@@ -12,7 +12,7 @@ function getLogicalLength(text) {
   for (let i = 0; i < text.length; i++) {
     const charCode = text.charCodeAt(i);
     // Check if it's the PUA character U+E002 (39C3 Logo)
-    if (charCode === 0xE002) {
+    if (charCode === 0xe002) {
       length += 5;
     } else {
       length += 1;

@@ -16,7 +16,7 @@ export const settings = {
   animationSpeed: 1.5,
   mode: 'wave',
   colorMode: 'violet-inv',
-  theme: 'lines', // 'lines', 'toggle', or 'ccc'
+  theme: 'lines', // 'lines', 'toggle', 'toggle39c3', or 'ccc'
   time: 0,
 };
 
@@ -30,6 +30,10 @@ export const themePresets = {
   toggle: {
     colorMode: 'mono',
     text: defaultTexts.default,
+  },
+  toggle39c3: {
+    colorMode: 'mono-inv',
+    text: 'POWER CYCLES',
   },
   ccc: {
     colorMode: 'mono',
