@@ -3,7 +3,6 @@ import { getBackgroundColor, getColor } from './colors.js';
 import { getLineWidth, calculateWeight } from './weight.js';
 import { getContext } from './canvas.js';
 
-// Render lines theme (exact port from DrawBot)
 export function renderLinesTheme(canvas) {
   const ctx = getContext();
 
@@ -23,7 +22,7 @@ export function renderLinesTheme(canvas) {
     maxTextWidth = Math.max(maxTextWidth, width);
   }
 
-  const maxTextHeight = settings.numLines * testSize * settings.lineSpacingFactor;
+  const maxTextHeight = testSize + (settings.numLines - 1) * testSize * settings.lineSpacingFactor;
   const usableWidth = settings.canvasSize - 2 * settings.margin;
   const usableHeight = settings.canvasSize - 2 * settings.margin;
 
@@ -31,10 +30,9 @@ export function renderLinesTheme(canvas) {
   const scaleFactor = Math.min(usableWidth / maxTextWidth, usableHeight / maxTextHeight);
   const finalFontSize = testSize * scaleFactor;
   const lineSpacing = finalFontSize * settings.lineSpacingFactor;
-
-  const textBlockHeight = settings.numLines * lineSpacing;
-  const startY =
-    (settings.canvasSize + textBlockHeight) / 2 - lineSpacing + settings.verticalOffset;
+  const textBlockHeight = finalFontSize + (settings.numLines - 1) * lineSpacing;
+  const topY = (settings.canvasSize - textBlockHeight) / 2 + settings.verticalOffset;
+  const startY = topY + (settings.numLines - 1) * lineSpacing;
 
   const midIndex = (text.length - 1) / 2;
 

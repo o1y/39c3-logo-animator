@@ -7,7 +7,7 @@ export const settings = {
   canvasSize: 1000,
   margin: 50,
   lineSpacingFactor: 0.92,
-  verticalOffset: 17,
+  verticalOffset: 3,
   animationSpeed: 1.5,
   mode: 'wave',
   colorMode: 'violet-inv',
