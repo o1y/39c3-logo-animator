@@ -1,8 +1,8 @@
-# 39C3 Logo Animator
+# 39C3 Power Cycles – Artwork Generator
 
-Interactive web-based animator for the 39C3 variable font, featuring dynamic weight interpolation and brand-compliant color modes.
+Interactive web-based artwork generator for the 39C3 variable font, featuring dynamic weight interpolation and brand-compliant color modes.
 
-![39C3 Logo Animator Demo](.github/screen.gif)
+![39C3 Artwork Generator Demo](.github/screen.gif)
 
 ## Development
 
