@@ -1,15 +1,58 @@
-import { settings } from '../config/settings.js';
+import { settings, defaultTexts, themePresets } from '../config/settings.js';
 import { exportPNG } from '../export/png.js';
 import { exportVideo } from '../export/video.js';
 import { applyColorTheme } from './theme.js';
 
+const formState = {
+  isTextDirty: false,
+};
+
 export function initEventListeners() {
-  document.getElementById('textInput').addEventListener('input', (e) => {
-    settings.text = e.target.value.toUpperCase();
+  const textInput = document.getElementById('textInput');
+
+  textInput.addEventListener('input', (e) => {
+    const newValue = e.target.value.toUpperCase();
+    settings.text = newValue;
+
+    formState.isTextDirty = true;
   });
 
-  document.getElementById('themeSelect').addEventListener('change', (e) => {
+  const themeSelect = document.getElementById('themeSelect');
+  const colorSelect = document.getElementById('colorSelect');
+  const linesSlider = document.getElementById('linesSlider');
+  const linesValue = document.getElementById('linesValue');
+
+  themeSelect.addEventListener('change', (e) => {
     settings.theme = e.target.value;
+
+    if (!formState.isTextDirty) {
+      const preset = themePresets[settings.theme];
+
+      if (preset) {
+        if (preset.colorMode) {
+          settings.colorMode = preset.colorMode;
+          colorSelect.value = preset.colorMode;
+          applyColorTheme(settings.colorMode);
+        }
+
+        if (preset.numLines) {
+          settings.numLines = preset.numLines;
+          linesSlider.value = preset.numLines;
+          linesValue.textContent = preset.numLines.toString();
+        }
+
+        if (preset.text) {
+          settings.text = preset.text;
+          textInput.value = preset.text;
+        }
+      }
+
+      // Restore default text when switching away from CCC preset text
+      if (settings.theme !== 'ccc' && settings.text === defaultTexts.ccc) {
+        settings.text = defaultTexts.default;
+        textInput.value = defaultTexts.default;
+      }
+    }
 
     // Show/hide controls based on theme
     const linesControl = document.getElementById('linesControl');
@@ -51,8 +94,6 @@ export function initEventListeners() {
     settings.mode = e.target.value;
   });
 
-  const colorSelect = document.getElementById('colorSelect');
-
   if (colorSelect) {
     colorSelect.addEventListener('change', (e) => {
       settings.colorMode = e.target.value;
@@ -90,6 +131,7 @@ export function initEventListeners() {
 }
 
 export function initDisplayValues() {
+  document.getElementById('textInput').value = settings.text;
   document.getElementById('speedValue').textContent = settings.animationSpeed.toFixed(1) + 'x';
   document.getElementById('linesValue').textContent = settings.numLines;
   document.getElementById('widthValue').textContent = settings.widthValue;

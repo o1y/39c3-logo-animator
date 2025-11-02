@@ -1,5 +1,10 @@
+export const defaultTexts = {
+  default: '39C3 POWER CYCLES',
+  ccc: '39C3',
+};
+
 export const settings = {
-  text: '39C3 POWER CYCLES',
+  text: defaultTexts.default,
   numLines: 11,
   minWeight: 10,
   maxWeight: 100,
@@ -15,6 +20,24 @@ export const settings = {
   time: 0,
 };
 
+// Theme presets
+export const themePresets = {
+  lines: {
+    colorMode: 'violet-inv',
+    numLines: 11,
+    text: defaultTexts.default,
+  },
+  toggle: {
+    colorMode: 'mono',
+    text: defaultTexts.default,
+  },
+  ccc: {
+    colorMode: 'mono',
+    numLines: 18,
+    text: defaultTexts.ccc,
+  },
+};
+
 // 39C3 Brand Colors (one color + dark rule)
 export const colors = {
   // Neon Green tints (for UI variation)
@@ -25,7 +48,7 @@ export const colors = {
     '#00ff00', // 400 - Primary
     '#a3ff90', // 200
     '#ccffbe', // 100
-    '#ebffe5' // 50
+    '#ebffe5', // 50
   ],
   // Electric Violet tints (for UI variation)
   violet: [
@@ -35,7 +58,7 @@ export const colors = {
     '#9673ff', // 300 - Secondary
     '#b69dfe', // 200
     '#d4c4fe', // 100
-    '#efe7ff' // 50
+    '#efe7ff', // 50
   ],
   // Natural (monochrome)
   natural: '#faf5f5',
