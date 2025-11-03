@@ -6,41 +6,65 @@
     <title>39C3 Power Cycles – Artwork Generator</title>
     <link rel="stylesheet" href="/styles.css" />
   </head>
-  <body class="theme-violet">
+  <body x-data="appStore" :class="bodyThemeClass">
     <div class="header">
       <div class="controls">
         <div class="control-group">
           <label>Text Input</label>
-          <input type="text" id="textInput" maxlength="30" />
+          <input
+            type="text"
+            maxlength="30"
+            x-model="text"
+            @input="isTextDirty = true"
+          />
         </div>
         <div class="control-group">
           <label>Theme</label>
-          <select id="themeSelect">
+          <select x-model="theme">
             <option value="lines">Lines</option>
             <option value="toggle">Toggle</option>
-            <option value="toggle39c3">39C3 Toggle</option>
+            <option value="toggle39c3Animated">39C3 Toggle Animated</option>
+            <option value="toggle39c3Static">39C3 Toggle Static</option>
             <option value="ccc">CCC</option>
           </select>
         </div>
-        <div class="control-group" id="linesControl">
+        <div class="control-group" x-show="showLinesControl" x-cloak>
           <label>Lines</label>
-          <input type="range" id="linesSlider" min="2" max="24" step="1" value="11" />
-          <span class="value-display" id="linesValue">11</span>
+          <input
+            type="range"
+            min="2"
+            max="24"
+            step="1"
+            x-model.number="numLines"
+          />
+          <span class="value-display" x-text="linesDisplay"></span>
         </div>
-        <div class="control-group hidden" id="widthControl">
+        <div class="control-group" x-show="showWidthControl" x-cloak>
           <label>Width</label>
-          <input type="range" id="widthSlider" min="50" max="100" step="1" value="76" />
-          <span class="value-display" id="widthValue">76</span>
+          <input
+            type="range"
+            min="50"
+            max="100"
+            step="1"
+            x-model.number="widthValue"
+          />
+          <span class="value-display" x-text="widthDisplay"></span>
         </div>
-        <div class="control-group">
+        <div class="control-group" x-show="showSpeedControl" x-cloak>
           <label>Animation Speed</label>
-          <input type="range" id="speedSlider" min="0.1" max="3" step="0.1" value="2" />
-          <span class="value-display" id="speedValue">2.0x</span>
+          <input
+            type="range"
+            min="0.1"
+            max="3"
+            step="0.1"
+            x-model.number="animationSpeed"
+          />
+          <span class="value-display" x-text="speedDisplay"></span>
         </div>
-        <div class="control-group" id="modeControl">
+        <div class="control-group" x-show="showModeControl" x-cloak>
           <label>Animation Mode</label>
-          <select id="modeSelect">
-            <option value="wave" selected>Wave</option>
+          <select x-model="mode">
+            <option value="wave">Wave</option>
             <option value="pulse">Pulse</option>
             <option value="rotate">Rotate</option>
             <option value="breathe">Breathe</option>
@@ -49,50 +73,62 @@
         </div>
         <div class="control-group">
           <label>Color Mode</label>
-          <select id="colorSelect">
+          <select x-model="colorMode">
             <option value="mono">Natural + Dark</option>
             <option value="mono-inv">Dark + Natural</option>
             <option value="green">Green + Dark</option>
             <option value="green-inv">Dark + Green</option>
             <option value="violet">Violet + Dark</option>
-            <option value="violet-inv" selected>Dark + Violet</option>
+            <option value="violet-inv">Dark + Violet</option>
           </select>
         </div>
       </div>
 
       <div class="export-toggle-container">
-        <button id="exportToggleBtn" class="export-toggle-btn">
+        <button
+          class="export-toggle-btn"
+          :class="{ 'active': !exportSectionCollapsed }"
+          @click="toggleExportSection"
+        >
           <span class="toggle-text">Export Options</span>
           <span class="toggle-icon"></span>
         </button>
       </div>
 
-      <div class="download-section collapsed" id="downloadSection">
+      <div
+        class="download-section collapsed"
+        :class="{ 'collapsed': exportSectionCollapsed }"
+      >
         <div class="control-group">
           <label>Format</label>
-          <select id="exportFormat">
+          <select x-model="exportFormat">
             <option value="png">PNG Image (current frame)</option>
-            <option value="video">Video (WebM)</option>
+            <option value="video" :disabled="videoExportDisabled">Video (WebM)</option>
           </select>
         </div>
         <div class="control-group">
           <label>Resolution</label>
-          <select id="exportResolution">
+          <select x-model="exportResolution">
             <option value="1">1x (1000px)</option>
-            <option value="2" selected>2x (2000px)</option>
+            <option value="2">2x (2000px)</option>
             <option value="4">4x (4000px)</option>
           </select>
         </div>
-        <div class="control-group hidden" id="durationControl">
+        <div class="control-group" x-show="showDurationControl" x-cloak>
           <label>Duration</label>
-          <select id="exportDuration">
+          <select x-model="exportDuration">
             <option value="3">3 seconds</option>
-            <option value="5" selected>5 seconds</option>
+            <option value="5">5 seconds</option>
             <option value="10">10 seconds</option>
           </select>
         </div>
         <div class="control-group">
-          <button id="downloadBtn" class="download-btn">Download</button>
+          <button
+            class="download-btn"
+            @click="handleDownload"
+            :disabled="isExporting"
+            x-text="downloadButtonText"
+          ></button>
         </div>
       </div>
     </div>

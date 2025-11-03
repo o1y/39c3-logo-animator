@@ -25,5 +25,8 @@
     "prettier": "^3.6.2",
     "vite": "^7.1.12",
     "vite-plugin-compression": "^0.5.1"
+  },
+  "dependencies": {
+    "alpinejs": "^3.15.1"
   }
 }

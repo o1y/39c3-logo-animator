@@ -14,11 +14,18 @@ export function getBackgroundColor() {
 }
 
 export function getColor(charIndex, lineIndex, textLength, time) {
-  const t = time * settings.animationSpeed * 0.5;
+  // Use static time (0) for non-animated themes, otherwise use the provided time
+  const isAnimated = settings.capabilities && settings.capabilities.animated;
+  const effectiveTime = isAnimated ? time : 0;
+  const t = effectiveTime * settings.animationSpeed * 0.5;
 
   switch (settings.colorMode) {
     case 'green': {
-      // Green on Dark: Cycle through neon green tints
+      if (!isAnimated) {
+        // Static mode: Use primary green color only
+        return colors.green[3]; // '#00ff00' - Primary
+      }
+      // Animated mode: Cycle through neon green tints
       const index = Math.floor((t * 2 + charIndex * 0.5 + lineIndex * 0.3) % colors.green.length);
       return colors.green[index];
     }
@@ -29,7 +36,11 @@ export function getColor(charIndex, lineIndex, textLength, time) {
     }
 
     case 'violet': {
-      // Violet on Dark: Cycle through electric violet tints
+      if (!isAnimated) {
+        // Static mode: Use secondary violet color only
+        return colors.violet[2]; // '#9673ff' - Secondary
+      }
+      // Animated mode: Cycle through electric violet tints
       const index = Math.floor((t * 2 + charIndex * 0.5 + lineIndex * 0.3) % colors.violet.length);
       return colors.violet[index];
     }

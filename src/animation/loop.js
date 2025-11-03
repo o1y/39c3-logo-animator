@@ -17,7 +17,7 @@ function render() {
 
   if (settings.theme === 'toggle') {
     renderToggleTheme(canvas);
-  } else if (settings.theme === 'toggle39c3') {
+  } else if (settings.theme === 'toggle39c3Animated' || settings.theme === 'toggle39c3Static') {
     renderToggle39C3Theme(canvas);
   } else if (settings.theme === 'ccc') {
     renderCCCTheme(canvas);

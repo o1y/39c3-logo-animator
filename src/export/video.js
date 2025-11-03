@@ -5,14 +5,13 @@ import { generateFilename } from './filename.js';
 let mediaRecorder = null;
 let recordedChunks = [];
 
-export function exportVideo() {
-  const duration = parseInt(document.getElementById('exportDuration').value) * 1000; // Convert to ms
-  const resolution = parseInt(document.getElementById('exportResolution').value);
-  const downloadBtn = document.getElementById('downloadBtn');
-  const originalButtonText = downloadBtn.textContent;
+export function exportVideo(durationSeconds = 5, resolution = 2, callbacks = {}) {
+  const duration = durationSeconds * 1000; // Convert to ms
 
-  downloadBtn.disabled = true;
-  downloadBtn.textContent = 'Recording... 0%';
+  // Call onStart callback if provided
+  if (callbacks.onStart) {
+    callbacks.onStart();
+  }
 
   let recordingCanvas = getCanvas();
   const originalCanvas = getCanvas();
@@ -94,9 +93,10 @@ export function exportVideo() {
     link.click();
     URL.revokeObjectURL(url);
 
-    // Reset UI
-    downloadBtn.disabled = false;
-    downloadBtn.textContent = originalButtonText;
+    // Call onComplete callback if provided
+    if (callbacks.onComplete) {
+      callbacks.onComplete();
+    }
     recordedChunks = [];
   };
 
@@ -107,7 +107,11 @@ export function exportVideo() {
   const progressInterval = setInterval(() => {
     elapsed += 100;
     const percentage = Math.min(100, (elapsed / duration) * 100);
-    downloadBtn.textContent = `Recording... ${percentage.toFixed(0)}%`;
+
+    // Call onProgress callback if provided
+    if (callbacks.onProgress) {
+      callbacks.onProgress(Math.floor(percentage));
+    }
 
     if (elapsed >= duration) {
       clearInterval(progressInterval);

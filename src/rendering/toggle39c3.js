@@ -1,4 +1,4 @@
-import { settings, defaultTexts } from '../config/settings.js';
+import { settings, defaultTexts, themePresets } from '../config/settings.js';
 import { getBackgroundColor, getColor } from './colors.js';
 import { getContext } from './canvas.js';
 import { drawToggle } from './toggle.js';
@@ -26,6 +26,10 @@ export function renderToggle39C3Theme(canvas) {
   const logoText = defaultTexts.ccc;
   const userText = settings.text;
   if (!userText) return;
+
+  // Determine if animations should be active
+  const isAnimated = settings.capabilities && settings.capabilities.animated;
+  const preset = themePresets[settings.theme];
 
   const textColor = getColor(0, 0, 1, settings.time);
 
@@ -87,7 +91,9 @@ export function renderToggle39C3Theme(canvas) {
 
   const toggleX = row1StartX;
   const toggleY = startY;
-  drawToggle(toggleX, toggleY, toggleHeight, textColor, settings.time, 0, true);
+  // Use static time (π/2) for non-animated themes to position toggle in ON state, otherwise use settings.time
+  const toggleTime = isAnimated ? settings.time : Math.PI / 2;
+  drawToggle(toggleX, toggleY, toggleHeight, textColor, toggleTime, 0, true);
 
   const logoX = row1StartX + toggleWidth;
   setFont(settings.maxWeight, logoSize);
@@ -101,15 +107,22 @@ export function renderToggle39C3Theme(canvas) {
 
   ctx.textBaseline = 'middle';
 
-  // Render each character with individual weight animation
+  // Render each character with individual weight animation or static weight
   for (let charIndex = 0; charIndex < userText.length; charIndex++) {
     const char = userText[charIndex];
 
-    // Each character cycles through full weight range (min to max)
-    const t = settings.time * settings.animationSpeed;
-    const phase = charIndex * 0.3;
-    const cycle = (Math.sin(t + phase) + 1) / 2;
-    const weight = settings.minWeight + (settings.maxWeight - settings.minWeight) * cycle;
+    // Determine weight based on animation capability
+    let weight;
+    if (isAnimated) {
+      // Each character cycles through full weight range (min to max)
+      const t = settings.time * settings.animationSpeed;
+      const phase = charIndex * 0.3;
+      const cycle = (Math.sin(t + phase) + 1) / 2;
+      weight = settings.minWeight + (settings.maxWeight - settings.minWeight) * cycle;
+    } else {
+      // Use static weight from preset
+      weight = preset && preset.staticWeight ? preset.staticWeight : settings.maxWeight;
+    }
 
     setFont(weight, userTextSize);
     ctx.fillStyle = getColor(charIndex, 0, userText.length, settings.time);

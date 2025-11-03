@@ -16,8 +16,13 @@ export const settings = {
   animationSpeed: 1.5,
   mode: 'wave',
   colorMode: 'violet-inv',
-  theme: 'lines', // 'lines', 'toggle', 'toggle39c3', or 'ccc'
+  theme: 'lines', // 'lines', 'toggle', 'toggle39c3Animated', 'toggle39c3Static', or 'ccc'
   time: 0,
+  // Theme capabilities - controls which UI elements and features are available
+  capabilities: {
+    animated: true,
+    variableWeight: true
+  },
 };
 
 // Theme presets
@@ -26,19 +31,69 @@ export const themePresets = {
     colorMode: 'violet-inv',
     numLines: 11,
     text: defaultTexts.default,
+    capabilities: {
+      animated: true,
+      variableWeight: true,
+    },
+    controls: {
+      showLines: true,
+      showWidth: false,
+      showMode: true,
+    },
   },
   toggle: {
     colorMode: 'mono',
     text: defaultTexts.default,
+    capabilities: {
+      animated: true,
+      variableWeight: true,
+    },
+    controls: {
+      showLines: false,
+      showWidth: true,
+      showMode: false,
+    },
   },
-  toggle39c3: {
+  toggle39c3Animated: {
     colorMode: 'mono-inv',
     text: 'POWER CYCLES',
+    capabilities: {
+      animated: true,
+      variableWeight: false,
+    },
+    controls: {
+      showLines: false,
+      showWidth: false,
+      showMode: false,
+    },
+  },
+  toggle39c3Static: {
+    colorMode: 'mono-inv',
+    text: 'POWER CYCLES',
+    staticWeight: 80,
+    capabilities: {
+      animated: false,
+      variableWeight: false,
+    },
+    controls: {
+      showLines: false,
+      showWidth: false,
+      showMode: false,
+    },
   },
   ccc: {
     colorMode: 'mono',
     numLines: 22,
     text: defaultTexts.ccc,
+    capabilities: {
+      animated: true,
+      variableWeight: false,
+    },
+    controls: {
+      showLines: true,
+      showWidth: false,
+      showMode: false,
+    },
   },
 };
 

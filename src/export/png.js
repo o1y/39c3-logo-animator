@@ -3,8 +3,7 @@ import { getCanvas, getContext, setCanvas } from '../rendering/canvas.js';
 import { render } from '../animation/loop.js';
 import { generateFilename } from './filename.js';
 
-export function exportPNG() {
-  const resolution = parseInt(document.getElementById('exportResolution').value);
+export function exportPNG(resolution = 2) {
   const originalSize = settings.canvasSize;
 
   // Create temporary high-res canvas

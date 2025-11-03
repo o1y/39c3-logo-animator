@@ -4,6 +4,11 @@
   box-sizing: border-box;
 }
 
+/* Alpine.js cloak - hides elements until Alpine loads */
+[x-cloak] {
+  display: none !important;
+}
+
 :root {
   --accent-color: #9673ff;
   --accent-color-hover: #b69dfe;
