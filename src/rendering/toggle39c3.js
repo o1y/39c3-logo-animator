@@ -103,11 +103,21 @@ export function renderToggle39C3Theme(canvas) {
 
   // === Draw Second Row: User Text with Condensed Feature ===
   const row2Y = startY + toggleHeight + rowSpacing + userTextSize / 2;
-  let row2StartX = (settings.canvasSize - secondRowWidth) / 2;
+  const row2StartX = (settings.canvasSize - secondRowWidth) / 2;
 
-  ctx.textBaseline = 'middle';
+  // Create offscreen canvas to avoid Chrome glyph cache bug
+  // Render at normal width, then scale once when drawing to main canvas
+  const offscreen = document.createElement('canvas');
+  const offscreenWidth = userTextWidth * 1.2;
+  const offscreenHeight = userTextSize * 2;
+  offscreen.width = offscreenWidth;
+  offscreen.height = offscreenHeight;
+  const offCtx = offscreen.getContext('2d', { alpha: true });
 
-  // Render each character with individual weight animation or static weight
+  offCtx.textBaseline = 'middle';
+  const offscreenY = offscreenHeight / 2;
+
+  let currentX = 0;
   for (let charIndex = 0; charIndex < userText.length; charIndex++) {
     const char = userText[charIndex];
 
@@ -124,17 +134,20 @@ export function renderToggle39C3Theme(canvas) {
       weight = preset && preset.staticWeight ? preset.staticWeight : settings.maxWeight;
     }
 
-    setFont(weight, userTextSize);
-    ctx.fillStyle = getColor(charIndex, 0, userText.length, settings.time);
-
-    ctx.save();
-    ctx.translate(row2StartX, row2Y);
-    ctx.scale(widthScaleFactor, 1);
-    ctx.fillText(char, 0, 0);
-    ctx.restore();
+    offCtx.font = `${weight} ${userTextSize}px Kario39C3`;
+    offCtx.fillStyle = getColor(charIndex, 0, userText.length, settings.time);
+    offCtx.fillText(char, currentX, offscreenY);
 
     // Move to next character position
-    const metrics = ctx.measureText(char);
-    row2StartX += metrics.width * widthScaleFactor;
+    const metrics = offCtx.measureText(char);
+    currentX += metrics.width;
   }
+
+  // Draw the offscreen canvas once with horizontal scaling applied
+  // This avoids per-character transforms in Chrome's renderer
+  ctx.drawImage(
+    offscreen,
+    0, 0, offscreenWidth, offscreenHeight,
+    row2StartX, row2Y - offscreenHeight / 2, offscreenWidth * widthScaleFactor, offscreenHeight
+  );
 }
